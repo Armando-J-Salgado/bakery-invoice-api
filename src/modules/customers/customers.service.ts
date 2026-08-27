@@ -78,7 +78,7 @@ export class CustomersService {
     await this.customersRepository.softRemove(customer);
   }
 
-  async recover(id: number): Promise<void> {
+  async recover(id: number): Promise<{ message: string }> {
     const customer = await this.customersRepository.findOne({
       where: { id },
       withDeleted: true,
@@ -87,5 +87,6 @@ export class CustomersService {
       throw new NotFoundException(`Customer with ID ${id} not found`);
     }
     await this.customersRepository.recover(customer);
+    return { message: 'Customer recovered successfully' };
   }
 }

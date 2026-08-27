@@ -2,21 +2,45 @@
 # Dependencies
 node_modules/
 
-# Logs and temp files
+# Build artifacts
+dist/
+build/
+target/
+
+# Logs
 *.log
-*.tmp
 
 # Environment
 .env
 .env.local
-.env.*
+*.env.*
 
-# Coverage reports
+# Editors
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Coverage
 coverage/
 htmlcov/
 .coverage
 
+# Temporary files
+*.tmp
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
 # Testing
-.jest/
 .nyc_output/
+coverage/
+junit.xml
 ```
