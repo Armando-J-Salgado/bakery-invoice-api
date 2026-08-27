@@ -7,7 +7,6 @@ import { User } from '../entities/user.entity';
 @Injectable()
 export class SeederService {
   private readonly logger = new Logger(SeederService.name);
-  private static hasBeenSeeded = false;
 
   constructor(
     @InjectRepository(User)
@@ -15,23 +14,17 @@ export class SeederService {
   ) {}
 
   async seed(): Promise<void> {
-    if (SeederService.hasBeenSeeded) {
-      this.logger.log('Database already seeded, skipping...');
-      return;
-    }
-
     const adminExists = await this.userRepository.findOne({
       where: { email: process.env.ADMIN_EMAIL },
     });
 
     if (adminExists) {
       this.logger.log('Admin user already exists, skipping seeding...');
-      SeederService.hasBeenSeeded = true;
       return;
     }
-
+    
     const hashedPassword = await bcrypt.hash(
-      process.env.ADMIN_PASSWORD,
+      process.env.ADMIN_PASSWORD ?? '1234',
       10,
     );
 
@@ -46,6 +39,6 @@ export class SeederService {
 
     await this.userRepository.save(adminUser);
     this.logger.log('Admin user created successfully!');
-    SeederService.hasBeenSeeded = true;
+    return;
   }
 }

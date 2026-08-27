@@ -4,15 +4,18 @@ import { Repository, Like } from 'typeorm';
 import { ProductVariant } from '../../entities/product-variant.entity';
 import { CreateProductVariantDto } from './dto/create-product-variant.dto';
 import { UpdateProductVariantDto } from './dto/update-product-variant.dto';
+import { ProductsService } from '../products/products.service';
 
 @Injectable()
 export class ProductVariantsService {
   constructor(
     @InjectRepository(ProductVariant)
     private productVariantsRepository: Repository<ProductVariant>,
+    private productService: ProductsService,
   ) {}
 
   async create(createDto: CreateProductVariantDto): Promise<ProductVariant> {
+    await this.productService.findOne(createDto.productId);
     const variant = this.productVariantsRepository.create(createDto);
     return this.productVariantsRepository.save(variant);
   }
@@ -47,6 +50,9 @@ export class ProductVariantsService {
 
   async update(id: number, updateDto: UpdateProductVariantDto): Promise<ProductVariant> {
     await this.findOne(id);
+    if (updateDto.productId != null) {
+      await this.productService.findOne(updateDto.productId);
+    }
     await this.productVariantsRepository.update(id, updateDto);
     return this.findOne(id);
   }

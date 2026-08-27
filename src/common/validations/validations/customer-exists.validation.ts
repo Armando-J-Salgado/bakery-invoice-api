@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { AbstractValidation, ValidationResult } from '../abstract-validation';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Customer } from '../../entities/customer.entity';
-import { InvoiceType } from '../../entities/enums';
+import { Customer } from '../../../entities/customer.entity';
+import { InvoiceType } from '../../../entities/enums';
 
 @Injectable()
 export class CustomerExistsValidation extends AbstractValidation {

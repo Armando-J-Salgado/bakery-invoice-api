@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { AbstractValidation, ValidationResult } from './abstract-validation';
+import { AbstractValidation, ValidationResult } from '../abstract-validation';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ProductVariant } from '../../entities/product-variant.entity';
+import { ProductVariant } from '../../../entities/product-variant.entity';
 
 @Injectable()
 export class ProductVariantExistsValidation extends AbstractValidation {

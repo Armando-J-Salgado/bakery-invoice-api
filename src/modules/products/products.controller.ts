@@ -8,12 +8,15 @@ import {
   Delete,
   Query,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @ApiTags('Products')
 @Controller('products')
 export class ProductsController {
@@ -32,8 +35,8 @@ export class ProductsController {
     @Query('name') name?: string,
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
-    @Query('onlyDeleted') onlyDeleted?: boolean,
-    @Query('withDeleted') withDeleted?: boolean,
+    @Query('onlyDeleted') onlyDeleted?: string,
+    @Query('withDeleted') withDeleted?: string,
   ) {
     return this.productsService.findAll({
       name,

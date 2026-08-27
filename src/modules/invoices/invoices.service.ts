@@ -53,6 +53,9 @@ export class InvoicesService {
       const variant = await this.productVariantRepository.findOne({
         where: { id: saleItem.productVariantId },
       });
+      if(variant === null) {
+        throw new BadRequestException(`Product variant with id ${saleItem.productVariantId} was not found`)
+      }
       total += variant.price * saleItem.quantity;
     }
 
@@ -60,7 +63,7 @@ export class InvoicesService {
     const invoice = this.invoiceRepository.create({
       total,
       date: new Date(),
-      customerId: createInvoiceDto.customerId || null,
+      customerId: createInvoiceDto.customerId || undefined,
       userId,
       paymentMethod: createInvoiceDto.paymentMethod as PaymentMethod,
       type: createInvoiceDto.type as InvoiceType,

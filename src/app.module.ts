@@ -8,6 +8,7 @@ import { CustomersModule } from './modules/customers/customers.module';
 import { InvoicesModule } from './modules/invoices/invoices.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ValidationsModule } from './common/validations/validations.module';
+import { SeedsModule } from './seeds/seeds.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ValidationsModule } from './common/validations/validations.module';
     CustomersModule,
     InvoicesModule,
     ValidationsModule,
+    SeedsModule,
   ],
 })
 export class AppModule {}

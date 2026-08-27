@@ -8,13 +8,16 @@ import {
   Delete,
   Query,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 
 @ApiTags('Customers')
+@UseGuards(JwtAuthGuard)
 @Controller('customers')
 export class CustomersController {
   constructor(private readonly service: CustomersService) {}
@@ -30,8 +33,8 @@ export class CustomersController {
   findAll(
     @Query('name') name?: string,
     @Query('email') email?: string,
-    @Query('onlyDeleted') onlyDeleted?: boolean,
-    @Query('withDeleted') withDeleted?: boolean,
+    @Query('onlyDeleted') onlyDeleted?: string,
+    @Query('withDeleted') withDeleted?: string,
   ) {
     return this.service.findAll({
       name,

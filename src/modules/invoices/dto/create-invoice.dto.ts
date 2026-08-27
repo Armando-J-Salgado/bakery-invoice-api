@@ -1,7 +1,7 @@
 import { IsIn, IsInt, IsOptional, ValidateNested, IsArray, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { PaymentMethod, InvoiceType } from '../../entities/enums';
+import { PaymentMethod, InvoiceType } from '../../../entities/enums';
 
 export class CreateSaleItemDto {
   @ApiProperty({ description: 'Product variant ID' })

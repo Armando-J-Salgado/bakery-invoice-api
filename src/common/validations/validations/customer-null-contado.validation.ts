@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AbstractValidation, ValidationResult } from '../abstract-validation';
-import { InvoiceType } from '../../entities/enums';
+import { InvoiceType } from '../../../entities/enums';
 
 @Injectable()
 export class CustomerNullContadoValidation extends AbstractValidation {

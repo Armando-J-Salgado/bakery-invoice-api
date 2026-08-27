@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { SeederService } from './seeds/seeder.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,6 +16,9 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  const seederService = app.get(SeederService);
+  await seederService.seed();
 
   // Swagger configuration
   const config = new DocumentBuilder()

@@ -8,13 +8,16 @@ import {
   Delete,
   Query,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ProductVariantsService } from './product-variants.service';
 import { CreateProductVariantDto } from './dto/create-product-variant.dto';
 import { UpdateProductVariantDto } from './dto/update-product-variant.dto';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 
 @ApiTags('Product Variants')
+@UseGuards(JwtAuthGuard)
 @Controller('product-variants')
 export class ProductVariantsController {
   constructor(private readonly service: ProductVariantsService) {}
@@ -29,8 +32,8 @@ export class ProductVariantsController {
   @ApiOperation({ summary: 'Find all product variants' })
   findAll(
     @Query('name') name?: string,
-    @Query('onlyDeleted') onlyDeleted?: boolean,
-    @Query('withDeleted') withDeleted?: boolean,
+    @Query('onlyDeleted') onlyDeleted?: string,
+    @Query('withDeleted') withDeleted?: string,
   ) {
     return this.service.findAll({
       name,

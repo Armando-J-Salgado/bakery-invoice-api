@@ -9,6 +9,7 @@ import {
   ParseEnumPipe,
   UseGuards,
   Body,
+  Req,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiBody } from '@nestjs/swagger';
 import { InvoicesService } from './invoices.service';
@@ -26,8 +27,8 @@ export class InvoicesController {
   @Post()
   @ApiOperation({ summary: 'Create a new invoice' })
   @ApiBody({ type: CreateInvoiceDto })
-  create(@Body() createInvoiceDto: CreateInvoiceDto, @JwtAuthGuard() user: any) {
-    return this.invoicesService.create(createInvoiceDto, user.userId);
+  create(@Body() createInvoiceDto: CreateInvoiceDto, @Req() req: any) {
+    return this.invoicesService.create(createInvoiceDto, req.user.userId);
   }
 
   @Get()
@@ -43,8 +44,8 @@ export class InvoicesController {
     @Query('endDate') endDate?: string,
     @Query('customerId', ParseIntPipe) customerId?: number,
     @Query('type', new ParseEnumPipe(InvoiceType)) type?: InvoiceType,
-    @Query('onlyDeleted') onlyDeleted?: boolean,
-    @Query('withDeleted') withDeleted?: boolean,
+    @Query('onlyDeleted') onlyDeleted?: string,
+    @Query('withDeleted') withDeleted?: string,
   ) {
     return this.invoicesService.findAll({
       startDate,
