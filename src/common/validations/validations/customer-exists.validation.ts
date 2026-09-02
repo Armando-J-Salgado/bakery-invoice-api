@@ -16,15 +16,15 @@ export class CustomerExistsValidation extends AbstractValidation {
 
   async validate(data: any): Promise<ValidationResult> {
     const { type, customerId } = data;
-    
+
     if (type !== InvoiceType.FACTURA) {
       return { isValid: true };
     }
 
     if (!customerId) {
-      return { 
-        isValid: false, 
-        error: 'Customer ID is required for FACTURA type invoices' 
+      return {
+        isValid: false,
+        error: 'Customer ID is required for FACTURA type invoices',
       };
     }
 
@@ -33,9 +33,9 @@ export class CustomerExistsValidation extends AbstractValidation {
     });
 
     if (!customer) {
-      return { 
-        isValid: false, 
-        error: `Customer with ID ${customerId} does not exist` 
+      return {
+        isValid: false,
+        error: `Customer with ID ${customerId} does not exist`,
       };
     }
 

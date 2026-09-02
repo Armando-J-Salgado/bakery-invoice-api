@@ -22,7 +22,7 @@ export class SeederService {
       this.logger.log('Admin user already exists, skipping seeding...');
       return;
     }
-    
+
     const hashedPassword = await bcrypt.hash(
       process.env.ADMIN_PASSWORD ?? '1234',
       10,

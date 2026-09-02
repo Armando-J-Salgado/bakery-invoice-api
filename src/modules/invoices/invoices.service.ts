@@ -1,4 +1,8 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Brackets } from 'typeorm';
 import { Invoice } from '../../entities/invoice.entity';
@@ -53,8 +57,10 @@ export class InvoicesService {
       const variant = await this.productVariantRepository.findOne({
         where: { id: saleItem.productVariantId },
       });
-      if(variant === null) {
-        throw new BadRequestException(`Product variant with id ${saleItem.productVariantId} was not found`)
+      if (variant === null) {
+        throw new BadRequestException(
+          `Product variant with id ${saleItem.productVariantId} was not found`,
+        );
       }
       total += variant.price * saleItem.quantity;
     }
@@ -163,7 +169,7 @@ export class InvoicesService {
 
   async recover(id: number) {
     const invoice = await this.findOne(id, true);
-    
+
     if (!invoice.deleted_at) {
       throw new BadRequestException('Invoice is not deleted');
     }

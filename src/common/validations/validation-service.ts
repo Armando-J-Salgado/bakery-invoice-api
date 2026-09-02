@@ -16,7 +16,7 @@ export class ValidationService {
 
     // Create the chain of validations
     const validations: AbstractValidation[] = [];
-    
+
     for (const type of validationTypes) {
       const validation = this.validationFactory.create(type);
       validations.push(validation);

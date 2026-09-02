@@ -41,14 +41,19 @@ export class ProductVariantsService {
   }
 
   async findOne(id: number): Promise<ProductVariant> {
-    const variant = await this.productVariantsRepository.findOne({ where: { id } });
+    const variant = await this.productVariantsRepository.findOne({
+      where: { id },
+    });
     if (!variant) {
       throw new NotFoundException(`ProductVariant with ID ${id} not found`);
     }
     return variant;
   }
 
-  async update(id: number, updateDto: UpdateProductVariantDto): Promise<ProductVariant> {
+  async update(
+    id: number,
+    updateDto: UpdateProductVariantDto,
+  ): Promise<ProductVariant> {
     await this.findOne(id);
     if (updateDto.productId != null) {
       await this.productService.findOne(updateDto.productId);
