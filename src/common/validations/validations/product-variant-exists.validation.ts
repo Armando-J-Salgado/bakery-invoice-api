@@ -15,7 +15,7 @@ export class ProductVariantExistsValidation extends AbstractValidation {
 
   async validate(data: any): Promise<ValidationResult> {
     const { sales } = data;
-    
+
     if (!sales || !Array.isArray(sales)) {
       return { isValid: false, error: 'Sales array is required' };
     }
@@ -24,11 +24,11 @@ export class ProductVariantExistsValidation extends AbstractValidation {
       const variant = await this.productVariantRepository.findOne({
         where: { id: sale.productVariantId },
       });
-      
+
       if (!variant) {
-        return { 
-          isValid: false, 
-          error: `Product variant with ID ${sale.productVariantId} does not exist` 
+        return {
+          isValid: false,
+          error: `Product variant with ID ${sale.productVariantId} does not exist`,
         };
       }
     }
