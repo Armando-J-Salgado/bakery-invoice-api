@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { AbstractValidation, ValidationResult } from './abstract-validation';
 
-export type ValidationType = 
+export type ValidationType =
   | 'productVariantExists'
   | 'quantityPositive'
   | 'customerExists'

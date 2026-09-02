@@ -27,7 +27,10 @@ jest.setTimeout(30000);
 const originalConsoleError = console.error;
 console.error = (...args) => {
   // Only log actual errors, not warnings
-  if (args[0] instanceof Error || args.some(arg => arg?.message?.includes('Error'))) {
+  if (
+    args[0] instanceof Error ||
+    args.some((arg) => arg?.message?.includes('Error'))
+  ) {
     originalConsoleError.apply(console, args);
   }
 };

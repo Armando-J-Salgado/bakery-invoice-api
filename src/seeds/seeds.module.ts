@@ -4,8 +4,8 @@ import { User } from 'src/entities/user.entity';
 import { SeederService } from './seeder.service';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([User])],
-    providers: [SeederService],
-    exports: [SeederService],
+  imports: [TypeOrmModule.forFeature([User])],
+  providers: [SeederService],
+  exports: [SeederService],
 })
 export class SeedsModule {}

@@ -1,0 +1,133 @@
+name: Security Analysis
+on:
+    pull_request:
+        branches:
+            - develop
+            - main
+    push:
+        branches:
+            - main
+
+permissions:
+    contents: read
+    security-events: write
+    actions: read
+
+jobs:
+    pruebas-unitarias:
+        name: Pruebas unitarias
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout de código
+              uses: actions/checkout@v3
+            - name: Configurar Node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: '22'
+                cache: 'npm'
+            - name: Instalar dependencias
+              run: npm ci
+            - name: Build de la API
+              run: npm run build
+            - name: Pruebas unitarias
+              run: npm test
+            - name: Formato de código
+              run: npm run format:check
+    
+    codeql-analysis:
+        name: Análisis SAST
+        runs-on: ubuntu-latest
+        needs: pruebas-unitarias
+        steps:
+            - name: Configurar máquina virtual  
+              uses: actions/checkout@v4 
+            - name: Iniciar codeql
+              uses: github/codeql-action/init@v3
+              with:
+                languages: typescript
+            - name: Configurar Node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: '22'
+                cache: 'npm'
+            - name: Instalar dependencias
+              run: npm ci
+            - name: Build
+              run: npm run build
+            - name: Ejecutar análisis
+              uses: github/codeql-action/analyze@v3
+    
+    trivy-scan:
+        name: Escaneo de vulnerabilidades
+        runs-on: ubuntu-latest
+        needs: codeql-analysis
+        steps:
+            - name: Configurar repositorio
+              uses: actions/checkout@v4
+            - name: Iniciar escaner
+              uses: aquasecurity/trivy-action@master
+              with:
+                scan-type: 'fs'
+                scan-ref: '.'
+                format: 'sarif'
+                output: 'trivy-fs-report.sarif'
+                severity: 'CRITICAL,HIGH'
+            - name: Generar reporte
+              uses: actions/upload-artifact@v4
+              with:
+                name: trivy-reports
+                path: trivy-fs-report.sarif
+    
+    gitleaks-scan:
+        name: Detección de Secretos
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout del código
+              uses: actions/checkout@v4
+              with:
+                fetch-depth: 0
+            - name: Búsqueda de secretos expuestos
+              uses: gitleaks/gitleaks-action@v2
+              env:
+                GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+                GITLEAKS_ENABLE_UPLOAD_ARTIFACT: true
+    
+    generate-sbom:
+        name: Generación de SBOM
+        runs-on: ubuntu-latest
+        needs: trivy-scan
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Iniciar SBOM
+              uses: anchore/sbom-action@v0
+              with:
+                path: .
+                format: cyclonedx-json
+                output-file: sbom.cyclonedx.json
+            - name: Subir reporte
+              uses: actions/upload-artifact@v4
+              with:
+                name: sbom-report
+                path: sbom.cyclonedx.json
+    
+    security-gate:
+        name: Política de Seguridad
+        runs-on: ubuntu-latest
+        needs: [trivy-scan, gitleaks-scan]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Configuración de políticas
+              uses: aquasecurity/trivy-action@master
+              with:
+                scan-type: 'fs'
+                scan-ref: '.'
+                severity: 'CRITICAL'
+                exit-code: '1'
+                ignore-unfixed: true
+    
+    
+    
+    
+

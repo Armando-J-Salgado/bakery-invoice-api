@@ -22,7 +22,7 @@ export class TestDataFactory {
   static createProductVariant(overrides: Partial<any> = {}) {
     return {
       name: `Test Variant ${Date.now()}`,
-      price: 10.00,
+      price: 10.0,
       stock: 100,
       sku: `SKU-${Date.now()}`,
       ...overrides,

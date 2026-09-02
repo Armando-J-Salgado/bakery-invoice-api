@@ -13,9 +13,7 @@ import { Customer } from '../../entities/customer.entity';
 
 @Global()
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([ProductVariant, Customer]),
-  ],
+  imports: [TypeOrmModule.forFeature([ProductVariant, Customer])],
   providers: [
     ValidationFactory,
     ValidationService,
@@ -26,9 +24,6 @@ import { Customer } from '../../entities/customer.entity';
     PaymentMethodValidValidation,
     InvoiceTypeValidValidation,
   ],
-  exports: [
-    ValidationService,
-    ValidationFactory,
-  ],
+  exports: [ValidationService, ValidationFactory],
 })
 export class ValidationsModule {}

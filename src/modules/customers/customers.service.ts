@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository} from 'typeorm';
+import { Repository } from 'typeorm';
 import { Customer } from '../../entities/customer.entity';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
@@ -15,9 +15,11 @@ export class CustomersService {
   ) {}
 
   private async validateProductVariant(id: number): Promise<void> {
-    const productVariant = await this.productVariantService.findOne(id)
+    const productVariant = await this.productVariantService.findOne(id);
     if (!productVariant) {
-      throw new NotFoundException(`Product variant with id ${id} was not found`)
+      throw new NotFoundException(
+        `Product variant with id ${id} was not found`,
+      );
     }
 
     return;
@@ -50,7 +52,9 @@ export class CustomersService {
     }
 
     if (params?.email) {
-      query.andWhere('customer.email LIKE :email', { email: `%${params.email}%` });
+      query.andWhere('customer.email LIKE :email', {
+        email: `%${params.email}%`,
+      });
     }
 
     return query.getMany();

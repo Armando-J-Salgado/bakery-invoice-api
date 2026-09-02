@@ -3,9 +3,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 export const getTestDatabaseConfig = (): TypeOrmModuleOptions => ({
   type: 'better-sqlite3',
   database: ':memory:',
-  entities: [
-    __dirname + '/../src/entities/*.entity{.ts,.js}',
-  ],
+  entities: [__dirname + '/../src/entities/*.entity{.ts,.js}'],
   synchronize: true,
   dropSchema: true,
   logging: false,

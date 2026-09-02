@@ -22,7 +22,10 @@ export class AuthHelper {
     });
   }
 
-  async generateUserToken(userId: number = 1, email: string = 'user@test.com'): Promise<string> {
+  async generateUserToken(
+    userId: number = 1,
+    email: string = 'user@test.com',
+  ): Promise<string> {
     return this.generateToken({
       email,
       sub: userId,
