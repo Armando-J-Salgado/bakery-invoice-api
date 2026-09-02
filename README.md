@@ -1,98 +1,212 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Invoice API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API REST desarrollada con NestJS para la gestión de ventas e inventario de una empresa de postres. El sistema centraliza el proceso de venta mediante la generación de facturas que agrupan múltiples transacciones, permitiendo administrar información comercial de forma organizada y segura.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+El objetivo principal de este proyecto es demostrar la aplicación de buenas prácticas de desarrollo de software, incorporando pruebas automatizadas, análisis de calidad, controles de seguridad y automatización mediante CI/CD.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tecnologías Utilizadas
 
-## Project setup
+- NestJS
+- TypeScript
+- PostgreSQL
+- TypeORM
+- Jest
+- ESLint
+- Prettier
+- GitHub Actions
+- CodeQL
+- Trivy
+- Gitleaks
+- CycloneDX SBOM
 
-```bash
-$ npm install
-```
+---
 
-## Compile and run the project
+## Requisitos
 
-```bash
-# development
-$ npm run start
+- Node.js 22 o superior
+- npm
+- PostgreSQL
 
-# watch mode
-$ npm run start:dev
+---
 
-# production mode
-$ npm run start:prod
-```
+## Instalación
 
-## Run tests
+Clonar el repositorio:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+git clone <repository-url>
+cd invoice-api
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Instalar dependencias:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm ci
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## Ejecución Local
 
-Check out a few resources that may come in handy when working with NestJS:
+Modo desarrollo:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+npm run start:dev
+```
 
-## Support
+Modo producción:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+npm run start:prod
+```
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Compilación
 
-## License
+Generar la versión compilada de la aplicación:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```bash
+npm run build
+```
+
+---
+
+## Calidad de Código
+
+### Formatear código
+
+Aplica automáticamente las reglas de formato definidas por Prettier.
+
+```bash
+npm run format
+```
+
+### Verificar formato
+
+Valida que el código cumpla con los estándares definidos sin realizar cambios.
+
+```bash
+npm run format:check
+```
+
+### Análisis estático
+
+Ejecuta las reglas de ESLint configuradas para el proyecto.
+
+```bash
+npm run lint
+```
+
+---
+
+## Pruebas
+
+El proyecto utiliza **Jest** como framework principal para la ejecución de pruebas automatizadas.
+
+### Ejecutar pruebas unitarias
+
+```bash
+npm test
+```
+
+### Ejecutar pruebas en modo observación
+
+```bash
+npm run test:watch
+```
+
+### Generar reporte de cobertura
+
+```bash
+npm run test:cov
+```
+
+### Ejecutar pruebas en modo depuración
+
+```bash
+npm run test:debug
+```
+
+### Ejecutar pruebas End-to-End
+
+```bash
+npm run test:e2e
+```
+
+---
+
+# Integración Continua y Seguridad
+
+El repositorio incorpora un proceso de Integración Continua (CI) mediante GitHub Actions para validar automáticamente la calidad y seguridad del código antes de su integración en ramas principales.
+
+Los pipelines se ejecutan automáticamente sobre:
+
+- Pull Requests hacia `develop`
+- Pull Requests hacia `main`
+- Pushes realizados directamente en `main`
+
+## Pipeline de Validación
+
+### Pruebas Unitarias
+
+Verifica que la aplicación compile correctamente y que todas las pruebas unitarias sean exitosas.
+
+Además, valida el cumplimiento de las reglas de formato establecidas mediante Prettier.
+
+### Análisis SAST con CodeQL
+
+Se realiza análisis estático de seguridad sobre el código TypeScript para identificar vulnerabilidades, patrones inseguros y posibles defectos de implementación.
+
+### Escaneo de Vulnerabilidades con Trivy
+
+Se realiza un análisis de dependencias y componentes del proyecto para identificar vulnerabilidades conocidas clasificadas como:
+
+- HIGH
+- CRITICAL
+
+### Detección de Secretos con Gitleaks
+
+Se analiza el historial del repositorio y el código fuente en busca de credenciales, contraseñas, tokens o secretos filtrados accidentalmente.
+
+### Generación de SBOM
+
+Se genera automáticamente un **Software Bill of Materials (SBOM)** utilizando el estándar CycloneDX, proporcionando trazabilidad sobre los componentes de software utilizados por la aplicación.
+
+### Security Gate
+
+El pipeline incorpora una política de seguridad que impide aprobar cambios cuando se detectan vulnerabilidades críticas que incumplen los criterios establecidos para el proyecto.
+
+---
+
+# Flujo de Desarrollo
+
+El flujo de trabajo recomendado es el siguiente:
+
+1. Crear una rama de desarrollo.
+2. Implementar cambios.
+3. Ejecutar validaciones locales.
+4. Crear un Pull Request.
+5. Esperar la ejecución automática de los pipelines.
+6. Realizar revisión de código.
+7. Aprobar e integrar los cambios.
+
+---
+
+# Buenas Prácticas Implementadas
+
+Este proyecto busca evidenciar la aplicación de prácticas modernas de ingeniería de software, incluyendo:
+
+- Integración continua (CI).
+- Pruebas automatizadas.
+- Formateo consistente de código.
+- Análisis estático de calidad.
+- Análisis estático de seguridad (SAST).
+- Escaneo de vulnerabilidades en dependencias.
+- Detección temprana de filtración de secretos.
+- Generación de SBOM para trazabilidad de componentes.
+- Automatización de validaciones previas a la integración.
+
+Aunque el dominio funcional corresponde a la gestión de ventas e inventario, el propósito principal del repositorio es demostrar un ciclo de desarrollo seguro, automatizado y alineado con buenas prácticas de calidad de software.
