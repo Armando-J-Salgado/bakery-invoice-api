@@ -17,6 +17,10 @@ async function bootstrap() {
     }),
   );
 
+  app.enableCors({
+    origin: process.env.FRONTEND_URL || '',
+  });
+
   const seederService = app.get(SeederService);
   await seederService.seed();
 

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Like, Not, Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 import { ProductsService } from '../../../src/modules/products/products.service';
 import { Product } from '../../../src/entities/product.entity';
@@ -14,7 +14,6 @@ describe('ProductsService - Unit Tests', () => {
   const mockProduct: Partial<Product> = {
     id: 1,
     name: 'Test Product',
-    description: 'Test Description',
     created_at: new Date(),
     updated_at: new Date(),
     deleted_at: null,
@@ -35,10 +34,10 @@ describe('ProductsService - Unit Tests', () => {
         create: jest.fn(),
         save: jest.fn(),
         findOne: jest.fn(),
+        find: jest.fn(),
         update: jest.fn(),
         softRemove: jest.fn(),
         recover: jest.fn(),
-        createQueryBuilder: jest.fn(),
       })
       .compile();
 
@@ -54,7 +53,6 @@ describe('ProductsService - Unit Tests', () => {
     it('should create a product successfully', async () => {
       const createDto: CreateProductDto = {
         name: 'New Product',
-        description: 'New Description',
       };
 
       jest.spyOn(productRepository, 'create').mockReturnValue(createDto as any);
@@ -72,70 +70,66 @@ describe('ProductsService - Unit Tests', () => {
     const mockProducts: Product[] = [mockProduct as Product];
 
     it('should return all products without filters', async () => {
-      const mockQueryBuilder = {
-        where: jest.fn().mockReturnThis(),
-        andWhere: jest.fn().mockReturnThis(),
-        withDeleted: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValue(mockProducts),
-      };
-
-      jest.spyOn(productRepository, 'createQueryBuilder').mockReturnValue(mockQueryBuilder as any);
+      jest.spyOn(productRepository, 'find').mockResolvedValue(mockProducts);
 
       const result = await service.findAll();
 
       expect(result).toEqual(mockProducts);
-      expect(productRepository.createQueryBuilder).toHaveBeenCalledWith('product');
+
+      expect(productRepository.find).toHaveBeenCalledWith({
+        where: {},
+        relations: {
+          variants: true,
+        },
+        withDeleted: undefined,
+      });
     });
 
     it('should filter products by name', async () => {
-      const mockQueryBuilder = {
-        where: jest.fn().mockReturnThis(),
-        andWhere: jest.fn().mockReturnThis(),
-        withDeleted: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValue(mockProducts),
-      };
-
-      jest.spyOn(productRepository, 'createQueryBuilder').mockReturnValue(mockQueryBuilder as any);
+      jest.spyOn(productRepository, 'find').mockResolvedValue(mockProducts);
 
       await service.findAll({ name: 'Test' });
 
-      expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith(
-        'product.name LIKE :name',
-        { name: '%Test%' },
-      );
+      expect(productRepository.find).toHaveBeenCalledWith({
+        where: {
+          name: Like('%Test%'),
+        },
+        relations: {
+          variants: true,
+        },
+        withDeleted: undefined,
+      });
     });
 
     it('should return only deleted products', async () => {
-      const mockQueryBuilder = {
-        where: jest.fn().mockReturnThis(),
-        andWhere: jest.fn().mockReturnThis(),
-        withDeleted: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValue(mockProducts),
-      };
-
-      jest.spyOn(productRepository, 'createQueryBuilder').mockReturnValue(mockQueryBuilder as any);
+      jest.spyOn(productRepository, 'find').mockResolvedValue(mockProducts);
 
       await service.findAll({ onlyDeleted: true });
 
-      expect(mockQueryBuilder.withDeleted).toHaveBeenCalled();
-      expect(mockQueryBuilder.where).toHaveBeenCalledWith('product.deleted_at IS NOT NULL');
+      expect(productRepository.find).toHaveBeenCalledWith({
+        where: {
+          deleted_at: Not(IsNull()),
+        },
+        relations: {
+          variants: true,
+        },
+        withDeleted: true,
+      });
     });
 
     it('should return products with deleted included', async () => {
-      const mockQueryBuilder = {
-        where: jest.fn().mockReturnThis(),
-        andWhere: jest.fn().mockReturnThis(),
-        withDeleted: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValue(mockProducts),
-      };
+  jest.spyOn(productRepository, 'find').mockResolvedValue(mockProducts);
 
-      jest.spyOn(productRepository, 'createQueryBuilder').mockReturnValue(mockQueryBuilder as any);
+  await service.findAll({ withDeleted: true });
 
-      await service.findAll({ withDeleted: true });
-
-      expect(mockQueryBuilder.withDeleted).toHaveBeenCalled();
-    });
+  expect(productRepository.find).toHaveBeenCalledWith({
+    where: {},
+    relations: {
+      variants: true,
+    },
+    withDeleted: true,
   });
+});
 
   describe('findOne', () => {
     it('should return a product by ID', async () => {
@@ -161,7 +155,6 @@ describe('ProductsService - Unit Tests', () => {
     it('should update a product successfully', async () => {
       const updateDto: UpdateProductDto = {
         name: 'Updated Product',
-        description: 'Updated Description',
       };
 
       jest.spyOn(service, 'findOne').mockResolvedValue(mockProduct as Product);
@@ -225,4 +218,5 @@ describe('ProductsService - Unit Tests', () => {
       await expect(service.recover(999)).rejects.toThrow(NotFoundException);
     });
   });
+});
 });

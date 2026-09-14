@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like, FindOptionsWhere } from 'typeorm';
+import { Repository, Like, FindOptionsWhere, IsNull, Not } from 'typeorm';
 import { Product } from '../../entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -30,19 +30,17 @@ export class ProductsService {
       where.name = Like(`%${params.name}%`);
     }
 
-    let query = this.productsRepository.createQueryBuilder('product');
-
     if (params?.onlyDeleted) {
-      query.withDeleted().where('product.deleted_at IS NOT NULL');
-    } else if (params?.withDeleted) {
-      query.withDeleted();
+      where.deleted_at = Not(IsNull());
     }
 
-    if (params?.name) {
-      query.andWhere('product.name LIKE :name', { name: `%${params.name}%` });
-    }
-
-    return query.getMany();
+    return this.productsRepository.find({
+      where,
+      relations: {
+        variants: true,
+      },
+      withDeleted: params?.withDeleted || params?.onlyDeleted,
+    });
   }
 
   async findOne(id: number): Promise<Product> {

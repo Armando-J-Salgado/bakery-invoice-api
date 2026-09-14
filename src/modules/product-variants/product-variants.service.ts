@@ -15,7 +15,12 @@ export class ProductVariantsService {
   ) {}
 
   async create(createDto: CreateProductVariantDto): Promise<ProductVariant> {
-    await this.productService.findOne(createDto.productId);
+    const product = await this.productService.findOne(createDto.productId);
+    if (!product) {
+      throw new NotFoundException(
+        `No se encontró el producto con id ${createDto.productId}`,
+      );
+    }
     const variant = this.productVariantsRepository.create(createDto);
     return this.productVariantsRepository.save(variant);
   }
