@@ -24,7 +24,6 @@ describe('ProductVariantsService - Unit Tests', () => {
     productId: 1,
     name: 'Test Variant',
     price: 100,
-    stock: 50,
     created_at: new Date(),
     updated_at: new Date(),
     deleted_at: null,
@@ -54,7 +53,7 @@ describe('ProductVariantsService - Unit Tests', () => {
         update: jest.fn(),
         softRemove: jest.fn(),
         recover: jest.fn(),
-        createQueryBuilder: jest.fn(),
+        find: jest.fn(),
       })
       .compile();
 
@@ -73,7 +72,6 @@ describe('ProductVariantsService - Unit Tests', () => {
         productId: 1,
         name: 'New Variant',
         price: 100,
-        stock: 50,
       };
 
       jest.spyOn(productService, 'findOne').mockResolvedValue(mockProduct as any);
@@ -92,7 +90,6 @@ describe('ProductVariantsService - Unit Tests', () => {
         productId: 999,
         name: 'Invalid Variant',
         price: 100,
-        stock: 50,
       };
 
       jest.spyOn(productService, 'findOne').mockRejectedValue(new NotFoundException('Product with ID 999 not found'));
@@ -101,74 +98,83 @@ describe('ProductVariantsService - Unit Tests', () => {
     });
   });
 
-  describe('findAll', () => {
-    const mockVariants: ProductVariant[] = [mockProductVariant as ProductVariant];
+describe('findAll', () => {
+  const mockVariants: ProductVariant[] = [
+    {
+      ...mockProductVariant,
+      product: mockProduct as any,
+    } as ProductVariant,
+  ];
 
-    it('should return all product variants without filters', async () => {
-      const mockQueryBuilder = {
-        where: jest.fn().mockReturnThis(),
-        andWhere: jest.fn().mockReturnThis(),
-        withDeleted: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValue(mockVariants),
-      };
+  it('should return all product variants without filters', async () => {
+    jest
+      .spyOn(productVariantRepository, 'find')
+      .mockResolvedValue(mockVariants);
 
-      jest.spyOn(productVariantRepository, 'createQueryBuilder').mockReturnValue(mockQueryBuilder as any);
+    const result = await service.findAll();
 
-      const result = await service.findAll();
+    expect(result).toEqual(mockVariants);
 
-      expect(result).toEqual(mockVariants);
-      expect(productVariantRepository.createQueryBuilder).toHaveBeenCalledWith('variant');
-    });
-
-    it('should filter variants by name', async () => {
-      const mockQueryBuilder = {
-        where: jest.fn().mockReturnThis(),
-        andWhere: jest.fn().mockReturnThis(),
-        withDeleted: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValue(mockVariants),
-      };
-
-      jest.spyOn(productVariantRepository, 'createQueryBuilder').mockReturnValue(mockQueryBuilder as any);
-
-      await service.findAll({ name: 'Test' });
-
-      expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith(
-        'variant.name LIKE :name',
-        { name: '%Test%' },
-      );
-    });
-
-    it('should return only deleted variants', async () => {
-      const mockQueryBuilder = {
-        where: jest.fn().mockReturnThis(),
-        andWhere: jest.fn().mockReturnThis(),
-        withDeleted: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValue(mockVariants),
-      };
-
-      jest.spyOn(productVariantRepository, 'createQueryBuilder').mockReturnValue(mockQueryBuilder as any);
-
-      await service.findAll({ onlyDeleted: true });
-
-      expect(mockQueryBuilder.withDeleted).toHaveBeenCalled();
-      expect(mockQueryBuilder.where).toHaveBeenCalledWith('variant.deleted_at IS NOT NULL');
-    });
-
-    it('should return variants with deleted included', async () => {
-      const mockQueryBuilder = {
-        where: jest.fn().mockReturnThis(),
-        andWhere: jest.fn().mockReturnThis(),
-        withDeleted: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValue(mockVariants),
-      };
-
-      jest.spyOn(productVariantRepository, 'createQueryBuilder').mockReturnValue(mockQueryBuilder as any);
-
-      await service.findAll({ withDeleted: true });
-
-      expect(mockQueryBuilder.withDeleted).toHaveBeenCalled();
+    expect(productVariantRepository.find).toHaveBeenCalledWith({
+      where: {},
+      relations: {
+        product: true,
+      },
+      withDeleted: undefined,
     });
   });
+
+  it('should filter variants by name', async () => {
+    jest
+      .spyOn(productVariantRepository, 'find')
+      .mockResolvedValue(mockVariants);
+
+    await service.findAll({ name: 'Test' });
+
+    const findCall = jest.mocked(productVariantRepository.find).mock.calls[0][0];
+
+    expect(findCall?.relations).toEqual({
+      product: true,
+    });
+
+    expect(findCall?.withDeleted).toBeUndefined();
+    expect(findCall?.where).toHaveProperty('name');
+  });
+
+  it('should return only deleted variants', async () => {
+    jest
+      .spyOn(productVariantRepository, 'find')
+      .mockResolvedValue(mockVariants);
+
+    await service.findAll({ onlyDeleted: true });
+
+    expect(productVariantRepository.find).toHaveBeenCalledWith({
+      where: {
+        deleted_at: expect.anything(),
+      },
+      relations: {
+        product: true,
+      },
+      withDeleted: true,
+    });
+  });
+
+  it('should return variants with deleted included', async () => {
+    jest
+      .spyOn(productVariantRepository, 'find')
+      .mockResolvedValue(mockVariants);
+
+    await service.findAll({ withDeleted: true });
+
+    expect(productVariantRepository.find).toHaveBeenCalledWith({
+      where: {},
+      relations: {
+        product: true,
+      },
+      withDeleted: true,
+    });
+  });
+});
 
   describe('findOne', () => {
     it('should return a product variant by ID', async () => {

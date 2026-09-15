@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like } from 'typeorm';
+import { Repository, Like, FindOptionsWhere, IsNull, Not } from 'typeorm';
 import { ProductVariant } from '../../entities/product-variant.entity';
 import { CreateProductVariantDto } from './dto/create-product-variant.dto';
 import { UpdateProductVariantDto } from './dto/update-product-variant.dto';
@@ -30,19 +30,23 @@ export class ProductVariantsService {
     onlyDeleted?: boolean;
     withDeleted?: boolean;
   }): Promise<ProductVariant[]> {
-    let query = this.productVariantsRepository.createQueryBuilder('variant');
-
-    if (params?.onlyDeleted) {
-      query.withDeleted().where('variant.deleted_at IS NOT NULL');
-    } else if (params?.withDeleted) {
-      query.withDeleted();
-    }
+    const where: FindOptionsWhere<ProductVariant> = {};
 
     if (params?.name) {
-      query.andWhere('variant.name LIKE :name', { name: `%${params.name}%` });
+      where.name = Like(`%${params.name}%`);
     }
 
-    return query.getMany();
+    if (params?.onlyDeleted) {
+      where.deleted_at = Not(IsNull());
+    }
+
+    return this.productVariantsRepository.find({
+      where,
+      relations: {
+        product: true,
+      },
+      withDeleted: params?.withDeleted || params?.onlyDeleted,
+    });
   }
 
   async findOne(id: number): Promise<ProductVariant> {
