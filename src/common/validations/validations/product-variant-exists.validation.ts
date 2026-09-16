@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
 import { AbstractValidation, ValidationResult } from '../abstract-validation';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductVariant } from '../../../entities/product-variant.entity';
 
-@Injectable()
+@Injectable({ scope: Scope.TRANSIENT })
 export class ProductVariantExistsValidation extends AbstractValidation {
   constructor(
     @InjectRepository(ProductVariant)

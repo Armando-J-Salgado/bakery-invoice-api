@@ -110,14 +110,21 @@ export class InvoicesService {
     }
 
     if (queryParams.startDate) {
+      const startDate = new Date(queryParams.startDate);
+      startDate.setUTCHours(0, 0, 0, 0);
+
       query.andWhere('invoice.date >= :startDate', {
-        startDate: new Date(queryParams.startDate),
+        startDate,
       });
     }
 
     if (queryParams.endDate) {
-      query.andWhere('invoice.date <= :endDate', {
-        endDate: new Date(queryParams.endDate),
+      const endDate = new Date(queryParams.endDate);
+      endDate.setUTCHours(0, 0, 0, 0);
+      endDate.setUTCDate(endDate.getUTCDate() + 1);
+
+      query.andWhere('invoice.date < :endDate', {
+        endDate,
       });
     }
 
