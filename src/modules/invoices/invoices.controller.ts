@@ -233,8 +233,11 @@ export class InvoicesController {
       },
     },
   })
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.invoicesService.findOne(id);
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('includeDeleted') includeDeleted?: string,
+  ) {
+    return this.invoicesService.findOne(id, includeDeleted === 'true');
   }
 
   @Delete(':id')

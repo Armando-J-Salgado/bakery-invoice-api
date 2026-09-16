@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
 import { AbstractValidation, ValidationResult } from '../abstract-validation';
 import { InvoiceType } from '../../../entities/enums';
 
-@Injectable()
+@Injectable({ scope: Scope.TRANSIENT })
 export class InvoiceTypeValidValidation extends AbstractValidation {
   async validate(data: any): Promise<ValidationResult> {
     const { type } = data;

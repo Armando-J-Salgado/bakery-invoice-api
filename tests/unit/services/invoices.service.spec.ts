@@ -26,7 +26,6 @@ describe('InvoicesService - Unit Tests', () => {
     productId: 1,
     name: 'Test Variant',
     price: 100,
-    stock: 50,
   };
 
   const mockUser = {
@@ -242,8 +241,8 @@ describe('InvoicesService - Unit Tests', () => {
         { startDate: new Date('2024-01-01') },
       );
       expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith(
-        'invoice.date <= :endDate',
-        { endDate: new Date('2024-12-31') },
+        'invoice.date < :endDate',
+        { endDate: new Date('2025-01-01') },
       );
     });
 

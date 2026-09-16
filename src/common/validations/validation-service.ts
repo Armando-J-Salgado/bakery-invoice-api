@@ -18,7 +18,7 @@ export class ValidationService {
     const validations: AbstractValidation[] = [];
 
     for (const type of validationTypes) {
-      const validation = this.validationFactory.create(type);
+      const validation = await this.validationFactory.create(type);
       validations.push(validation);
     }
 

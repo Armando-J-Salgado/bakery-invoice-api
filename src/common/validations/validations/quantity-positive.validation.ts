@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
 import { AbstractValidation, ValidationResult } from '../abstract-validation';
 
-@Injectable()
+@Injectable({ scope: Scope.TRANSIENT })
 export class QuantityPositiveValidation extends AbstractValidation {
   async validate(data: any): Promise<ValidationResult> {
     const { sales } = data;
